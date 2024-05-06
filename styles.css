@@ -1,7 +1,36 @@
 
 #mapid { 
-    height: 500px;
-    width: 60%; 
-    
+    height: 100%;
+    width: 100%; 
+    border-radius: 1%;
 }
-
+ 
+#container_principal {
+    padding: 10%;
+    height: 854px;
+    background-image: url(https://fretador.com.br/themes/fretador/assets/images/banner1.jpg);
+    background-repeat: no-repeat;
+    background-size: cover; 
+}
+ 
+.navbar {
+    background-color: #004e6c;
+}
+ 
+#card {
+    background-color: #004e6c;
+    width: 100%;
+    margin: 2%;
+}
+ 
+.card-body {
+    background-color: #004e6c;
+}
+ 
+#card-title {
+    color: #ffffff;
+}
+ 
+.card-text {
+    color: #ffffff;
+}
