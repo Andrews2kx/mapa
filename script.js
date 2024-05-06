@@ -1,5 +1,11 @@
 let localData = document.getElementById('local_data');
-let temperaturaData = document.getElementById('temperatura_data');
+let cidadeData = document.getElementById('cidade_data');
+let tempData = document.getElementById('temp_data');
+let minTempData = document.getElementById('min_temp_data');
+let maxTempData = document.getElementById('max_temp_data');
+let sensTermData = document.getElementById('sensacao_term_data');
+let umidadeData = document.getElementById('umidade_term_data');
+let velocidadeVentoData = document.getElementById('velocidade_vento_data');
 var map;
  
  
@@ -7,7 +13,15 @@ function success(pos){
     console.log(pos.coords.latitude, pos.coords.longitude);
     localData.textContent = `Latitude:${pos.coords.latitude}, Longitude:${pos.coords.longitude}`;
     getClima(pos.coords.latitude, pos.coords.longitude)
-        .then(clima => {temperaturaData.textContent = `Clima: ${clima}°`});
+        .then(clima => {
+        	cidadeData.textContent = `${clima.cidade}, ${clima.pais}`;
+			tempData.textContent = `Temperatura: ${clima.temp}°`;
+			minTempData.textContent = `Mínimo: ${clima.minTemp}°`;
+			maxTempData.textContent = `Máximo: ${clima.maxTemp}°`;
+			sensTermData.textContent = `Sensação Térmica: ${clima.sensTerm}°`;
+			umidadeData.textContent = `Umidade: ${clima.umidade}%`;
+            velocidadeVentoData.textContent = `Velocidade do vento: ${clima.velocidadeVento} km/h`;
+        });
  
     if (map === undefined) {
         map = L.map('mapid').setView([pos.coords.latitude, pos.coords.longitude], 17);
@@ -29,13 +43,22 @@ function error(err){
     console.log(err);
 }
  
-function getClima(lat, longi) {
+async function getClima(lat, longi) {
     const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${longi}&units=metric&appid=e0bf80a120d5e637f433c49847feacdf`;
     const firstRetVal = fetch(url)
                         .then(resp => resp.json())
-                        .then(jsonBody => jsonBody.list)
-                        .then(items => {
-                            return items[0].main.temp; 
+                        .then(jsonBody => jsonBody)
+                        .then(body => {
+                            return {
+                                pais: body.city.country,
+                                cidade: body.city.name,
+                                temp: body.list[0].main.temp,
+                                minTemp: body.list[0].main.temp_min,
+                                maxTemp: body.list[0].main.temp_max,
+                                sensTerm: body.list[0].main.feels_like,
+                                umidade: body.list[0].main.humidity,
+                                velocidadeVento: body.list[0].wind.speed
+                            }
                         });
     return firstRetVal;
 }
